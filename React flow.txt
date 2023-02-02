@@ -1,0 +1,315 @@
+1. npx create-react-app amazon-clone
+2. npm start
+3. firebase.js -- add config file from firebase website along with install firebase in project npm install firebase 
+4. delete app.tests, setup.tests,logo from src
+5.Header.js (Component so H capital ) functional component
+6. nav bar --- sticky top:0 , 60px height ,display -flex, flex: means extend whatever space available, z-index:100
+7. Material ui for all icons in react
+  ->logo fit to container property is object-fit: contain
+  ->flex:1; give remaining extra space to this div
+
+8. Home page ->max width, 
+    image mask , to transparent and width:100%
+==> 9. arrow function () =>(single statement which gets returned);  and () =>{ return x;}; "{}" means function, so need to have return statement;
+10: render is a function which takes html data as parameters , don't write a function there. write above render line.
+      justify-content :main axis; align-items:cross axis;
+      disply:flex; and width:100% for all children makes equl space in the parent;
+11. To horizontally center a div block, use margin:auto;
+12. base url "/" should be at the bottom, otherwise it would never be picked. 
+C++ functions + class , all use class , but again in react we use functions more
+why because if we use usestate it updates the value automatically.
+13. react-router-dom for changing the page witout refreshin, i.e react;
+ <BrowserRouter>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
+
+14. npm install react-currency-format; for pricing in decimals, thousand separator , react-number-format = react-currency-format
+    react 18.00 currency format does not work, so use --save --force to install it.
+
+15. some good white color variants : f3f3f3, dddddd, rgb(234, 237,237),
+     orange of amazon :f0c14b    border: #a88734 #9c7e31 #846a29; 
+==> 16. React Context API / REDUX
+
+   It is like common database for react where we can push or pull data
+   Best because no need to pass props to the nested children unneccessarily. 
+   For creating context
+	->context = createContext();
+   For only one component tree to have Access control, we use,
+	-><context.provider value={useState or useReducer Hook}>
+   For getting data 
+	->useContext(context);
+   useState, useReducer used so that if any value changes , it's updated in webpage without page refresh.
+   useState is for a single variable or object and manually we need to change the value,
+   useReducer is like, it has another function eg:reducer which takes state and action , according to action we can change the state. (more readable)
+ 
+   
+   const Provider = ({children, intialState, stateChangerFunction}) =>(
+     <context.Provider value={useReducer(stateChangerFuction , initialState)}>{children}</context.Provider> 
+   )
+   
+   =>stateChangerFunction = reducer.
+     how to get dispatch function 
+     1. const [state, dispatch]  = useReducer(...); 
+           In above line both state and dispatch are assigned to value, i.e all app components get access to both.
+     2. cnst [state, dispatch] = useContext(context);
+     basically speaking dispatch = reducer, but useReducer provides a function that is attached to the intialstate provided which is dispatch.
+
+   =>two rules of react hooks
+     1.It should be called at the beginning of the function, not inside loops, if, etc
+     2. react hooks can only be called inside functions(that's why they are created). not from class
+     3. calling outside function , then use arrow functions
+
+17. Tag usage
+    export default function Card({children}){
+       return(
+         <p style = {color:red}>{children}</p>
+    } 
+
+      <Card> hey! <Card />
+
+    *** Every function can be used as a Tag like html
+
+18. add an object ,{...state, basket:[...state.basket, x};
+    remove an object return state.filter((ob) =>{return ob!= "123"}); 
+
+19. Comments in React . // single line or outside render. {/* comment line */} inside jsx (javascript xml) or render
+20. Suddenly components were not loadig inside Context Provider.
+
+21.small front end tip
+   <div className="MainDiv">
+     <div> <a>g </a> <p>hello</p>
+     <div>this is second div</div>
+   </div>
+   If you display flex in main div, first, second div be aligned center, but the contents in second div are not aligned center.
+
+22. While importing "x.css" but fo js files "x"
+23. Effectively handling null pointer exception 
+    Eg: basket.item not correct, basket?.item =>here ? is used to handle it.
+
+24.Array.reduce((sum, element)=> element+sum,0); intialValue is 0 here. only one value is returned after all iterations. 
+	=> iterates on each element by performin an operation with the previously returned value. for the first element givrn inital value is used.
+
+25. removing from state object is important, don't go with id, go with index for single item;
+   arr.find(functionx); where function funcitonx(val){return va>=8;}
+   arr.findIndex() to find index of the object
+   fruits.splice(2, 1, "Lemon", "Kiwi"); 2->index, 1->number of elements , "Lemon" ,"kiwi" new elements to add.
+   console.warn("cannot remove the element as there is no ${action.item.id});
+   splice function returns the deleted elements. (Huge change in cart elements)
+
+26. console.log() before and after a value change, shows changed variable vaue,
+     Because object reference is passed in the console, and the value of it changes dynamically.
+    JSON.parse(JSON.stringify(object)); use this
+
+==> 27. onClick function was running twice? why . In React mode useState updaters run twice just to rely on.
+
+28. Replace image src when error occured is. require() function fetches the static media or data from files.
+   <div className="header__logo">
+          <img
+            src="http://pngimg.com/uploads/amazon/amazon_PNG11.png"
+            onError={({ currentTarget }) => {
+              currentTarget.onError = false; //prevents looping
+              currentTarget.src = require("./images/amazon_homepage_logo.png");
+            }}
+          />
+    </div>
+
+29. Login page is a form , remember always because on submit data is transferred to another place. otherwise we have to write whole logic in login page itself.
+
+30. Select all children in a div class in css, div > *
+    width:100%; means it takes the width full width of the nearest assigned parent.
+
+31. <Button> tag directly using in react has some inline properties which don't go away by changing in css file.
+
+32. button, input text had a adifference of 2% in width, inherited from their parent. why?
+    By default box-sizing:borderbox for input tags, not for bttons in html
+    margin:auto aligins a div in center because it is block element, input tag is inline it will use as low space as possble.
+
+33. event is the arument passed to an event handler.
+    event.target returns the element (read-only)
+    event.target.value returns the value of the element present in that target, eg: for input tags.
+    event.target.nodeName returns the tag name. Eg: H1 ,P
+
+34. submit button in html refreshes the page when type = "submit" , So even in react on handling events(inner code is html right), we write e.preventDefault(); 
+
+35. npm install firebase,            => to get firebase
+    sudo npm install -g firebase-tools    => for the deployment etc
+   
+36. firebaseApp = firebase.initializeApp(firebaseConfig) , firebaseApp.firestore as DB 
+       and firebase.auth() for authentication.[auth is common for all I assume ]
+      enable email login in firebase website, this handles everything automatically.
+
+    Another syntax is 
+
+  import { initializeApp } from "firebase/app";
+​​  import { GoogleAuthProvider,​​  getAuth,​​  signInWithPopup,​​  signInWithEmailAndPassword,  createUserWithEmailAndPassword, sendPasswordResetEmail,  signOut,} from "firebase/auth";
+​​  import { getFirestore, query, getDocs, collection, where, addDoc} from "firebase/firestore";
+   
+   const app = ​​initializeApp(firebaseConfig);
+​​   const auth = getAuth(app);
+​​   const db = getFirestore(app);
+   
+   which explains separate file for firestore, auth.
+   const googleProvider = new GoogleAuthProvider(); which heps in signin with popup.
+
+----------Just to take a break ---------
+  NodeJs is similar to react, where we use home.ejs file where <%  java code to execute %> <%= java code which returns value %>
+  Controllers -> views(home.ejs files) , Routers(to route) , Models (for db), config files(db) ,assets(images,css,js files)
+
+----------------------------------------
+
+37. creating a user with email and password is dead easy in firestore.
+    auth.createUserWithEmailAndPAssword(email, password).then((auth) =>console.log(auth)).catch((error) =>console.alert(error.message));
+    auth.signInWithEmailAndPassword to sign in
+    auth.signOut()    =>that's all user signs out.
+    signIn, signOut, etc al these functions are asynchronous. So, if you write navigate next to this, navigate will execute. so, use await or .then
+    When using google popup auth, enabe it in firebase
+    
+38. change webpage.
+      a) By router
+      b) To change programaticaly we use useHistory();
+
+39. useEffect() is a function which executes , when a variable or group of variables [user , basket] assigned to it changes, If nothing assigned, it will run once at component loading
+
+40. Javascript is single threaded by default , one line after the other gets executed,
+    So, we use some functions that are asynchronous,(run independently)
+    Eg: let response = fetch(...); //fetch is asynchronous call
+        let image = response .data ;
+     Now, image can be an error, as fetch doesn't complete 
+        so, we use a)   .then() or promises
+                   b)  async,await
+                   c) button.addEventListener('click', some_function); 
+      Eg: fetch().then().then().catch(error => {})
+   
+   How to make custom asynchronous function? Just add async before function, and we use await inside it to execute sequentialy.
+   Eg: async function x(){
+       let response  = await fetch(..);
+       let data = await respose.data():
+      }
+
+   ===> All async calls are made after the main thread is executed. So, logs could give error even the logs are present after the async calls
+
+41. When both <Link to="/abc"> and onClick function is enabled, what happens? First onClick function executes which leads to redirection of page, The url in link tab does not work.
+
+42. Conditional rendering
+
+    true && expression returns the expression. i.e prints the expression in output.
+    false && expression, evaluates false and expression is skipped
+   
+    simple one: condition ? a:b
+ 
+   where we use it? in <Link to={!user && '/login'}  =>when user signs out , page won't go to login page but stays in home best experience.
+
+43. If value={email} in input tag, value does not change, so u also need to set onchnage event.
+
+44. npm ls --depth=0;  //view instaled modules
+    npm ls --depth=1; //view dependency of modules
+    npm ls -g --depth=0; history
+
+45. what happens when we don't write export default,
+When we import in another file, it says no default was found.
+
+46. navigate("/") navigates to desired page.   [history.push(), history.replace() which does not allow to go to previous page]
+
+47. How to write function inside a function?  
+    Write as const e = ()=>{}, arrow function
+    onClick Functions execute on rendering, why? Because we are calling function, instead of passing function 1)either using arrow function 2)don't call params()
+
+48. == does type conversion before comparison. === does data type checking too.
+
+49. auth.onAuthStateChanged() is a function, it takes a function as an argument which it executes when the auth state changed. 
+     So to assign it we will put this line in useState() ,[] component loading time.
+     Whatever function or logic we want to run in the beginning , we will write it in useEffect.
+     =>So, if we write useEffect() in app component, it only executes once at APP COMPONENT loading.
+       App loads when the page gets refreshed in react.
+    When page refreshes, localstorae will get cleared, where auth will be stored.
+
+50. Why firebase is easy?
+    Because it is connected to data layer component of react, and no need to manage cookies and all for sign in /out.
+
+51. DEPLOY // don't install all packages globally (some projects require differenet versions.)
+    sudo npm install -g firebase-tools    //sudo is for linux systems
+    firebase login
+    firebase init      //select hosting deploy ,then select database, then single page-app(rewrites all urls to index.html)
+    npm run build      // creates optimized build
+    if you make any changes run npm run build
+    
+    firebase depoy
+
+    ==>clearing cache by pressing ctrl+f5 to clear cache is most important thing, to get rid of automatic firebase hosting page.
+
+52. SASS Syntactically Awesome Style Sheet is similar to css but have some advantages, like nesting
+   a{}, a:hover{} in css; a{   &hover: } in sass.
+    sass files are again converted to css by sass .
+
+53. when shifting the code dependencies may not move, then npm install would install all the dependencies at a go present in package.json,
+    but due to conflicts in different versions of dependencies need to use --legacy-peer-deps
+
+54. WHOLE APP CRASHED BEACAUSE
+    console.log("user is ",user, user.email, " ",basket); user is null and user.email error.
+    Sp, use user?.email. React handles it beautifully.
+
+55 ===> VERY VERY BIG ERROR
+   Failed to decode param '/%PUBLIC_URL%/favicon.ico'  at decodeURIComponent (<anonymous>)
+   It means it is trying to reach that path, where error comes.    npm start PUBLIC_URL=helomawa
+   If we run again just "npm start", the default react value will be put.
+
+   on firebase init I guess, homepage: "git/..." is added to package.json which caused whole different error of manifest, %PUBLIC% etc
+   after removing that line it worked
+
+  and %PUBLIC% is only accessible in public folder , it is an environment variable
+  all the files inside the public folder are not optimized/processed otherwise we can say untouched.
+  %PUBLIC% path is replaced by absolute path(according to client) when we run np run build.
+  disadvantage: missing files cannot be caled at compile time, which leads to more 404 not found errors
+
+56. Restart npm start, when changes are made to package.json
+
+57.hover effect on products on home page, box-shadow, trnasfor:scale(1.02), animation which has scae, time:0.5s
+
+58. I want to use noty package to send messages after adding to basket.
+    npm install noty
+    
+   let n = new Noty({
+            type:"success",
+            layout:"topRight",
+            text:`<div class="noty__container"><img src=${image}> ${title} has been added to basket</div>`,
+            closeWith:["button"],
+            timeout:2
+        }).show();
+  
+  XXXX  no ->render(n); it prints the html code in "n"; wrong , need to know internal statement
+ => how to import all from a module import from "some_module",
+.noty_container background:color:white is partially white because our div is a part of main noty div i.e noty_type__success, noty_layout__topright{top:70px;!important to overwrite}, noty_ 
+  =>noty is directly injecting it's code into main html file, which can be done by js, #root.innerHTML() ...
+
+59. Changing font gave the website , a different look
+
+60. add element to an object is different from adding a variable to an object.
+
+61. using react-alice carousel, we can create a slider easily by giving some properties
+
+62. READY_MADE_CODES
+    react-flip-move      add r remove from basket gives clean animation
+         It needs ref to work, functional components donot have so use forwardRef which accepts arrow function whose second parameter is reference to the object given by forwardRef 
+         miidlewares are used to tweak parameters of a function
+    react-alice-carousel for sliding images with bunch of options to play
+
+63. FOR MEDIA use src=require("") r require(`${}`) if you want to do the inbuilt static stuff
+    and require takes only string no ariables or objects
+
+64. visibility:hidden, take space in the page
+    display: none , takes no space
+
+65. navigate can be used in call back, on some condition navigate, but <Link> tag is not like that, click on link tag
+
+66. how to give percentage to each item in flexbox.  flex:0.2; meaning give 20% of flex to this
+
+67. npm i @stripe/stripe-js; npm i @stripe/react-stripe-js; you need to install these for stripe payment.
+    
+
+In class Component of react, setState works as useState and constructor of the class initialtes the variables.
