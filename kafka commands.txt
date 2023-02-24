@@ -1,0 +1,89 @@
+Copy the path of the Kafka folder. Now go to config inside kafka folder and open zookeeper.properties file. 
+
+1. Copy the path against the field dataDir and add /zookeeper-data to the path.
+2. Now in the same folder config open server.properties and scroll down to log.dirs and paste the path. To the path add /kafka-logs
+
+to run zookeeper:  .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+
+to run kafka server: .\bin\windows\kafka-server-start.bat .\config\server.properties
+
+WHEN DELETED ALL LOCAL TEMP FILES to release space
+run this to reset kafka .\bin\windows\kafka-streams-application-reset.bat
+
+CREATE A TOPIC
+.\bin\windows\kafka-topics.bat --create --topic test --bootstrap-server localhost:9092
+
+PRODUCER OF KAFKA
+.\bin\windows\kafka-console-producer.bat --topic test --bootstrap-server localhost:9092
+This is my first event
+This is my second event
+
+
+CONSUMER OF KAFKA
+bin/kafka-console-consumer.bat --topic test --from-beginning --bootstrap-server localhost:9092
+
+FINALLY: I found the error of kafka: JAVA commands were not running in kafka
+         AND I used space in setting path . path=""; **** NO SPACE ****
+         AND that path shoud be prepended i.e added at the first.
+         AND also set JAVA_HOME variable
+
+AND IN JAVA PRIMITIVE TYPES ARE PASS BY VALUE, OBJECTS are PASS BY REFERNCE;
+
+
+===>Producer in java 
+            Properties properties = new Properties();
+
+            if(!prop.getProperty("realtime.error.queue.sasl.enabled").equalsIgnoreCase("false")) {
+                properties.setProperty("security.protocol", prop.getProperty("security.protocol"));
+                properties.setProperty("sasl.mechanism", prop.getProperty("sasl.mechanism"));
+                properties.setProperty("sasl.jaas.config", prop.getProperty("sasl.jaas.config"));
+                properties.setProperty("sasl.client.callback.handler.class","sasl.client.callback.handler.class");
+            }
+
+
+            properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,  );
+            properties.setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+            properties.setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+            properties.setProperty(ProducerConfig.BATCH_SIZE_CONFIG,prop.getProperty("queue.batch.size"));
+
+            KafkaProducer<String,String> producer = new KafkaProducer<String, String>(properties);
+
+     ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, row);
+     producer.send(record);
+     producer.flush();
+
+
+==>Consumer in java
+           Properties properties = new Properties();
+
+            if(!prop.getProperty("realtime.queue.sasl.enabled").equalsIgnoreCase("false")) {
+                properties.setProperty("security.protocol", prop.getProperty("realtime.security.protocol"));
+                properties.setProperty("sasl.mechanism", prop.getProperty("realtime.sasl.mechanism"));
+                properties.setProperty("sasl.jaas.config", prop.getProperty("realtime.sasl.jaas.config"));
+            }
+
+
+            properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,  prop.getProperty("realtime."+tenantId+".queue.hosts"));
+            properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+            properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,  StringDeserializer.class.getName());
+            properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, prop.getProperty("realtime."+tenantId+".group.id"));
+            properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            properties.setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, prop.getProperty("realtime."+tenantId+".queue.batch.size"));
+            properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_DOC, "earliest");
+            properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, prop.getProperty("realtime."+tenantId+".queue.enable.auto.commit"));
+
+            consumer= KafkaConsumer<String, String>(properties);
+
+     consumer.subscribe(List.of(topic));
+       while (true) {
+                log.info("Starting Consumer : {}", topic);
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(Constants.CONSUMER_TIMEOUT));
+                if(records.isEmpty()){
+                    log.debug("no record, sleeping");
+                    Thread.sleep(3000);
+                    continue;
+                }
+        process(records);
+
+          }
+
